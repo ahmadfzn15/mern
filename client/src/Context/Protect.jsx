@@ -2,23 +2,26 @@ import { useEffect, createContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import Loading from "../Components/Loading";
 
-export const ProtectContext = createContext(null);
+export const ProtectContext = createContext({
+  user: {},
+  token: "",
+});
 
 export const ProtectProvider = ({ children }) => {
-  const [check, setCheck] = useState(false);
   const [user, setUser] = useState({});
+  const [check, setCheck] = useState(false);
   const navigate = useNavigate();
   const { token } = Cookies.get();
 
   useEffect(() => {
     if (!token) {
       navigate("/signin");
+      setCheck(true);
     }
     const checkAuth = async () => {
       await axios
-        .get("http://localhost:5000/check-auth", {
+        .get("http://localhost:5000/verify", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,7 +31,8 @@ export const ProtectProvider = ({ children }) => {
           setCheck(true);
         })
         .catch((err) => {
-          navigate("/signin");
+          // navigate("/signin");
+          setCheck(true);
         });
     };
 
@@ -36,8 +40,8 @@ export const ProtectProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProtectContext.Provider value={user}>
-      {check ? children : <Loading />}
+    <ProtectContext.Provider value={{ user, token }}>
+      {check ? children : null}
     </ProtectContext.Provider>
   );
 };

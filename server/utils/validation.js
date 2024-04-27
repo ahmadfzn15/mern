@@ -1,4 +1,4 @@
-const { body, check } = require("express-validator");
+const { body } = require("express-validator");
 const { Employee } = require("../models/Employee");
 const { User } = require("../models/User");
 

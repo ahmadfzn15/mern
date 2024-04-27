@@ -29,7 +29,7 @@ export const sidebar = [
     nested: false,
   },
   {
-    link: "/salary",
+    link: "/employee/salary",
     label: "Salary",
     icon: FaMoneyBillWave,
     nested: false,

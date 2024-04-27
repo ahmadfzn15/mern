@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <div className="w-56 fixed font-poppins bg-slate-900 max-h-screen h-full flex flex-col items-center">
+      <div className="w-56 fixed font-poppins bg-slate-900 max-h-screen h-full flex flex-col items-center z-50">
         <img src="/img/logo.png" alt="Logo" className="w-40 h-40" />
         <List className="text-white">
           {sidebar.map((d, i) => {
@@ -96,7 +96,7 @@ export default function Sidebar() {
                   >
                     <div className="flex items-center gap-2">
                       {React.createElement(d.icon, { className: "w-5 h-5" })}
-                      <h1 className="font-semibold text-xs font-poppins">
+                      <h1 className="font-bold text-xs font-poppins">
                         {d.label}
                       </h1>
                     </div>

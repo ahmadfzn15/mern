@@ -31,6 +31,7 @@ export default function Login() {
         route("/");
       })
       .catch((err) => {
+        alert(err.response?.data.data ?? err.message);
         setLoading(false);
       });
   };
@@ -38,7 +39,7 @@ export default function Login() {
   return (
     <>
       <LayoutAuth>
-        <div className="w-full h-full bg-white grid grid-cols-2 overflow-hidden">
+        <div className="w-screen h-screen bg-white grid grid-cols-2 overflow-hidden">
           <div className="w-full h-full">
             <img
               src="/img/img7.jpg"
@@ -46,9 +47,11 @@ export default function Login() {
               alt="Image"
             />
           </div>
-          <form onSubmit={postLogin}>
+          <form onSubmit={postLogin} className="flex items-center">
             <div className="w-[85%] p-10 flex flex-col mx-auto items-center gap-5">
-              <h1 className="text-4xl py-5 font-bold">Sign In</h1>
+              <h1 className="text-4xl py-5 font-bold text-slate-900">
+                Sign In
+              </h1>
               <div className="space-y-5 w-full text-slate-500 font-semibold">
                 <Input
                   color="blue"
@@ -94,15 +97,6 @@ export default function Login() {
                   disabled={loading}
                 >
                   Sign In
-                </Button>
-                <Button
-                  color="blue"
-                  fullWidth
-                  size="lg"
-                  variant="outlined"
-                  className="flex gap-2 justify-center items-center"
-                >
-                  <FcGoogle className="w-6 h-6" /> Continue With Google
                 </Button>
                 <h1 className="font-normal text-center">
                   Don&apos;t have an account?{" "}

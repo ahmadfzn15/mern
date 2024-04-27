@@ -33,10 +33,12 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
+  console.log("Hello");
   const err = validationResult(req);
   if (!err.isEmpty()) {
     return res.status(500).json({ message: err.array() });
   }
+
   const check = await User.findOne({ username: req.body.username });
   if (check) {
     const checkPwd = comparePassword(req.body.password, check.password);
@@ -50,22 +52,13 @@ exports.login = async (req, res, next) => {
       });
       return res.status(200).json({ data: "Successfully", token: token });
     } else {
-      return res.status(500).json({ data: "Username / password salah! 1" });
+      return res
+        .status(500)
+        .json({ data: "Password yang anda masukkan salah!" });
     }
   } else {
-    return res.status(500).json({ data: "Username / password salah! 2" });
+    return res.status(500).json({ data: "Username tidak ditemukan!" });
   }
 };
 
-exports.check = async (req, res, next) => {
-  const cookie = req.headers.authorization.split("Bearer ")[1];
-  if (cookie != "undefined") {
-    const verify = jwt.verify(cookie, process.env.JWT_KEY);
-    if (verify) {
-      return res.status(200).json({ data: verify });
-    }
-    return res.status(403).json({ data: "Unauthorizied" });
-  } else {
-    return res.status(403).json({ data: "Unauthorizied" });
-  }
-};
+exports.check = async (req, res, next) => {};

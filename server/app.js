@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const router = require("./router/routes");
-const helmet = require("helmet");
+const checkToken = require("./utils/checkToken");
 const port = process.env.PORT;
 require("./utils/db");
 

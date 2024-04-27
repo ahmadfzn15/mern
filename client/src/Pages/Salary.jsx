@@ -34,18 +34,16 @@ import {
   HiXMark,
 } from "react-icons/hi2";
 import Layout from "../Layout/Layout";
-import { EmployeeTable } from "../lib/DataSample";
-import { useEffect, useRef, useState, useContext } from "react";
+import { SalaryTable } from "../lib/DataSample";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { MdError } from "react-icons/md";
 import { BsCheck2Circle } from "react-icons/bs";
-import Cookies from "js-cookie";
 
-export default function Employee() {
+export default function Salary() {
   const profilePictureRef = useRef(null);
   const [alert, setAlert] = useState({ open: false, type: "", message: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [profilePicture, setProfilePicture] = useState(null);
   const [addEmployee, setAddEmployee] = useState(false);
   const [editEmployee, setEditEmployee] = useState(false);
   const [deleteEmployee, setDeleteEmployee] = useState(false);
@@ -55,105 +53,15 @@ export default function Employee() {
   const [field, setField] = useState({});
   const [fieldEdit, setFieldEdit] = useState({});
   const [chose, setChose] = useState(false);
-  const { token } = Cookies.get();
 
-  const changeProfilePicture = (e) => {
-    const file = URL.createObjectURL(e.target.files[0]);
-    setField({
-      profile_picture: e.target.files[0],
-      ...field,
-    });
-    setProfilePicture(file);
-  };
-
-  const changeEditEmployee = (id) => {
-    setEditEmployee(true);
-    setFieldEdit(data.find((d) => d._id === id));
-  };
-
-  const submitAddEmployee = async (e) => {
-    e.preventDefault();
-
-    axios
-      .post("http://localhost:5000/employee", field, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setStatus(!status);
-        setAddEmployee(false);
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Data berhasil ditambahkan.",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setAlert({
-          open: true,
-          type: "failed",
-          message: "Data gagal ditambahkan.",
-        });
-      });
-  };
-
-  const submitEditEmployee = async (e) => {
-    e.preventDefault();
-
-    axios
-      .put("http://localhost:5000/employee", fieldEdit)
-      .then((res) => {
-        setStatus(!status);
-        setEditEmployee(false);
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Data berhasil diedit.",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setAlert({
-          open: true,
-          type: "failed",
-          message: "Data gagal diedit.",
-        });
-      });
-  };
-
-  const submitDeleteEmployee = async () => {
-    axios
-      .delete("http://localhost:5000/employee", id)
-      .then((res) => {
-        setStatus(!status);
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Data berhasil dihapus.",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setAlert({
-          open: true,
-          type: "failed",
-          message: "Data gagal dihapus.",
-        });
-      });
-  };
+  const submitEditEmployee = async () => {};
 
   useEffect(() => {
     const getData = async () => {
       await axios
-        .get("http://localhost:5000/employee", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .get("http://localhost:5000/employee/salary")
         .then((res) => {
-          setData(res.data.map((d) => ({ ...d, checked: false })));
+          setData(res.data.data.map((d) => ({ ...d, checked: false })));
           setLoading(false);
         })
         .catch((err) => {
@@ -203,10 +111,10 @@ export default function Employee() {
       )}
       <Layout className="px-5 py-3 space-y-5">
         <div className="flex justify-between items-center w-full">
-          <h1 className="text-slate-800 font-bold">Employee</h1>
+          <h1 className="text-slate-800 font-bold">Salary</h1>
           <Breadcrumbs>
             <Link to="/">Dashboard</Link>
-            <Link to="/employee">Employee</Link>
+            <Link to="/employee/salary">Salary</Link>
           </Breadcrumbs>
         </div>
         <div className="w-full rounded-md border border-slate-200 shadow-sm shadow-slate-300 bg-white overflow-hidden p-5 space-y-3">
@@ -286,7 +194,7 @@ export default function Employee() {
                       />
                     </th>
                   )}
-                  {EmployeeTable.table.heading.map((d, i) => (
+                  {SalaryTable.table.heading.map((d, i) => (
                     <th key={i} className="p-2.5 font-medium whitespace-nowrap">
                       {d}
                     </th>
@@ -312,19 +220,6 @@ export default function Employee() {
                           </td>
                         )}
                         <td className="text-center whitespace-nowrap p-2">
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
-                            <img
-                              src={
-                                d.profile_picture == ""
-                                  ? "/img/user.png"
-                                  : d.profile_picture
-                              }
-                              alt=""
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        </td>
-                        <td className="text-center whitespace-nowrap p-2">
                           {d.name}
                         </td>
                         <td className="text-center whitespace-nowrap p-2">
@@ -334,7 +229,7 @@ export default function Employee() {
                           {d.telephone_number}
                         </td>
                         <td className="text-center whitespace-nowrap p-2">
-                          {d.role}
+                          {d.job}
                         </td>
                         <td className="text-center whitespace-nowrap p-2">
                           {d.gender}
@@ -398,7 +293,7 @@ export default function Employee() {
           </div>
         </div>
       </Layout>
-      <Dialog
+      {/* <Dialog
         open={deleteEmployee}
         handler={setDeleteEmployee}
         className="bg-slate-200"
@@ -421,220 +316,10 @@ export default function Employee() {
             Ya
           </Button>
         </DialogFooter>
-      </Dialog>
-      <Dialog open={addEmployee} className="bg-slate-200">
-        <DialogHeader className="flex justify-between">
-          <Typography variant="h4">Add Employee Form</Typography>
-          <IconButton variant="text" onClick={() => setAddEmployee(false)}>
-            <HiXMark className="w-7 h-7" />
-          </IconButton>
-        </DialogHeader>
-        <DialogBody className="py-3" divider>
-          <form onSubmit={submitAddEmployee}>
-            <div className="w-full space-y-4 max-h-[27rem] overflow-auto scrollbar-custom pr-3 py-4 rounded-lg">
-              <div className="relative w-min mx-auto mb-5">
-                <div className="w-40 h-40 rounded-full overflow-hidden">
-                  <img
-                    src={profilePicture ?? "/img/user.png"}
-                    className="w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
-                <div className="absolute bottom-0 right-0">
-                  <IconButton
-                    className="rounded-full"
-                    color="blue"
-                    variant="gradient"
-                    onClick={() => profilePictureRef.current.click()}
-                  >
-                    <HiPencil className="w-4 h-4" />
-                  </IconButton>
-                </div>
-              </div>
-              <input
-                type="file"
-                ref={profilePictureRef}
-                onChange={changeProfilePicture}
-                className="hidden"
-              />
-              <Input
-                label="Name"
-                color="blue"
-                value={field.name}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    name: e.target.value,
-                  })
-                }
-                autoFocus
-                required
-              />
-              <Input
-                type="email"
-                label="Email"
-                color="blue"
-                value={field.email}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    email: e.target.value,
-                  })
-                }
-                autoFocus
-                required
-              />
-              <Input
-                label="Telephone Number"
-                color="blue"
-                value={field.telephone_number}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    telephone_number: e.target.value,
-                  })
-                }
-                required
-              />
-              <Input
-                label="Role"
-                color="blue"
-                value={field.role}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    role: e.target.value,
-                  })
-                }
-                required
-              />
-              <div className="flex flex-col">
-                <label className="text-slate-600 text-sm">Gender</label>
-                <div className="flex gap-1">
-                  <Radio
-                    label="Men"
-                    color="blue"
-                    name="gender"
-                    value="men"
-                    onChange={(e) =>
-                      setField({
-                        ...field,
-                        gender: e.target.value,
-                      })
-                    }
-                    containerProps={{
-                      className: "scale-75",
-                    }}
-                  />
-                  <Radio
-                    label="Woman"
-                    color="blue"
-                    name="gender"
-                    value="woman"
-                    onChange={(e) =>
-                      setField({
-                        ...field,
-                        gender: e.target.value,
-                      })
-                    }
-                    containerProps={{
-                      className: "scale-75",
-                    }}
-                  />
-                </div>
-              </div>
-              <Input
-                type="text"
-                label="Place of birth"
-                color="blue"
-                value={field.place_of_birth}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    place_of_birth: e.target.value,
-                  })
-                }
-                required
-              />
-              <Input
-                type="date"
-                label="Date of birth"
-                color="blue"
-                value={field.date_of_birth}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    date_of_birth: e.target.value,
-                  })
-                }
-                required
-              />
-              <Textarea
-                color="blue"
-                resize={false}
-                label="Address"
-                value={field.address}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    address: e.target.value,
-                  })
-                }
-              />
-              <Input
-                label="Religion"
-                color="blue"
-                value={field.religion}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    religion: e.target.value,
-                  })
-                }
-              />
-              <Input
-                type={showPassword ? "text" : "password"}
-                label="Password"
-                icon={
-                  showPassword ? (
-                    <HiEye
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  ) : (
-                    <HiEyeSlash
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  )
-                }
-                color="blue"
-                name="password"
-                value={field.password}
-                onChange={(e) =>
-                  setField({
-                    ...field,
-                    password: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <Button
-              type="submit"
-              color="green"
-              disabled={loading}
-              fullWidth
-              className="mt-2"
-            >
-              Save
-            </Button>
-          </form>
-        </DialogBody>
-      </Dialog>
+      </Dialog> */}
       <Dialog open={editEmployee} className="bg-slate-200">
         <DialogHeader className="flex justify-between">
-          <Typography variant="h4">Edit Employee Form</Typography>
+          <Typography variant="h4">Edit Salary Form</Typography>
           <IconButton variant="text" onClick={() => setEditEmployee(false)}>
             <HiXMark className="w-7 h-7" />
           </IconButton>
@@ -642,31 +327,6 @@ export default function Employee() {
         <DialogBody className="py-3" divider>
           <form onSubmit={submitEditEmployee}>
             <div className="w-full space-y-4 max-h-[27rem] overflow-auto scrollbar-custom pr-3 py-4 rounded-lg">
-              <div className="relative w-min mx-auto mb-5">
-                <div className="w-40 h-40 rounded-full overflow-hidden">
-                  <img
-                    src={profilePicture ?? "/img/user.png"}
-                    className="w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
-                <div className="absolute bottom-0 right-0">
-                  <IconButton
-                    className="rounded-full"
-                    color="blue"
-                    variant="gradient"
-                    onClick={() => profilePictureRef.current.click()}
-                  >
-                    <HiPencil className="w-4 h-4" />
-                  </IconButton>
-                </div>
-              </div>
-              <input
-                type="file"
-                ref={profilePictureRef}
-                onChange={changeProfilePicture}
-                className="hidden"
-              />
               <Input
                 label="Name"
                 color="blue"
@@ -691,6 +351,7 @@ export default function Employee() {
                     email: e.target.value,
                   })
                 }
+                autoFocus
                 required
               />
               <Input
@@ -703,16 +364,17 @@ export default function Employee() {
                     telephone_number: e.target.value,
                   })
                 }
+                autoFocus
                 required
               />
               <Input
-                label="Role"
+                label="Job"
                 color="blue"
-                value={fieldEdit.role}
+                value={fieldEdit.job}
                 onChange={(e) =>
                   setFieldEdit({
                     ...fieldEdit,
-                    role: e.target.value,
+                    job: e.target.value,
                   })
                 }
                 autoFocus

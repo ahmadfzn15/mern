@@ -12,8 +12,30 @@ import ChartBar from "../Components/ChartBar";
 import ChartDonut from "../Components/ChartDonut";
 import MapOne from "../Components/Map1";
 import TableChannel from "../Components/TableChannel";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(false);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const getData = async () => {
+      await axios
+        .get("http://localhost:5000/information")
+        .then((res) => {
+          setData(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+        });
+    };
+
+    getData();
+  }, [status]);
+
   return (
     <Layout className="space-y-5 p-5">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">

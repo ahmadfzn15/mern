@@ -3,6 +3,7 @@ import { HiEnvelope, HiEye, HiEyeSlash } from "react-icons/hi2";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -51,7 +52,13 @@ export default function SignIn() {
               <Link to="/auth" className="text-sm font-thin self-end">
                 Forgot Password?
               </Link>
-              <Button color="blue" fullWidth size="lg" variant="gradient">
+              <Button
+                type="submit"
+                color="blue"
+                fullWidth
+                size="lg"
+                variant="gradient"
+              >
                 Sign In
               </Button>
               <Button

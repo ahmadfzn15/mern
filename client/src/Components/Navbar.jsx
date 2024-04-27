@@ -19,7 +19,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const user = useContext(ProtectContext);
+  const { user } = useContext(ProtectContext);
   const navigate = useNavigate();
 
   const signOut = async () => {
@@ -79,8 +79,12 @@ export default function Navbar() {
               </Menu>
             </div>
             <div className="flex flex-col items-end whitespace-nowrap">
-              <h1 className="text-sm text-slate-800">{user.username}</h1>
-              <small className="text-[11px] text-slate-500">{user.role}</small>
+              <h1 className="text-sm text-slate-800">
+                {user && user.username}
+              </h1>
+              <small className="text-[11px] text-slate-500">
+                {user && user.role}
+              </small>
             </div>
             <Menu>
               <MenuHandler>
@@ -89,7 +93,10 @@ export default function Navbar() {
                 </div>
               </MenuHandler>
               <MenuList>
-                <MenuItem className="flex items-center gap-2 text-blue-500">
+                <MenuItem
+                  className="flex items-center gap-2 text-blue-500"
+                  onClick={() => navigate("/profile")}
+                >
                   <HiUser className="w-4 h-4" />
                   Profile
                 </MenuItem>

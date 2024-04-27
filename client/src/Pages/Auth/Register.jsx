@@ -41,7 +41,7 @@ export default function Register() {
   return (
     <>
       <LayoutAuth>
-        <div className="w-full h-full bg-white grid grid-cols-2 overflow-hidden">
+        <div className="w-screen h-screen bg-white grid grid-cols-2 overflow-hidden">
           <div className="w-full h-full">
             <img
               src="/img/img7.jpg"
@@ -49,7 +49,7 @@ export default function Register() {
               alt="Image"
             />
           </div>
-          <form onSubmit={postRegister}>
+          <form onSubmit={postRegister} className="flex items-center">
             <div className="w-[85%] p-10 flex flex-col mx-auto items-center gap-5">
               <h1 className="text-4xl py-5 font-bold">Sign Up</h1>
               <div className="space-y-5 w-full text-slate-500 font-semibold">
